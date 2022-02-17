@@ -1,19 +1,12 @@
 // memanggil file model untuk pelanggaran
 let modelPelanggaran = require("../models/index").pelanggaran
 
-exports.getDataPelanggaran = (request, response) => {
-    modelPelanggaran.findAll()
-        .then(result => {
-            return response.json({
-                Count : result.length,
-                Pelanggaran : result
-            })
-        })
-        .catch(error => {
-            return response.json({
-                message: error.message
-            })
-        })
+exports.getDataPelanggaran = async(request, response) => { // variabel async digunakan ketika memakai await
+    let dataPelanggaran = await modelPelanggaran.findAll() //biasanya menggunakan seperti inti hanya untuk get
+    return response.json({
+        Count : dataPelanggaran.length,
+        Pelanggaran : dataPelanggaran
+    })
 }
 
 //untuk handle add data pelanggaran

@@ -1,3 +1,5 @@
+const md5 = require("md5")
+
 // memanggil file model untuk user
 let modelUser = require("../models/index").user
 
@@ -22,7 +24,7 @@ exports.addDataUser = (request, response) => {
     let newUser = {
         nama_user: request.body.nama_user,
         username: request.body.username,
-        password: request.body.password
+        password: md5(request.body.password)
     }
     modelUser.create(newUser)
     .then(result => {
