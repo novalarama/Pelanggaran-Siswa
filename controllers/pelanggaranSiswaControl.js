@@ -5,7 +5,10 @@ let modelPS = require("../models/index").pelanggaran_siswa
 let modelDetailPS = require("../models/index").detail_pelanggaran_siswa
 
 exports.getDataPelanggaranSiswa = async(request, response) => { // variabel async digunakan ketika memakai await
-    let dataPelanggaran = await modelPelanggaran.findAll() //biasanya menggunakan seperti inti hanya untuk get
+    let dataPelanggaran = await modelPS.findAll({
+        include:["siswa"],
+        include:["user"]
+    }) //biasanya menggunakan seperti inti hanya untuk get
     return response.json({
         Count : dataPelanggaran.length,
         Pelanggaran : dataPelanggaran
@@ -15,9 +18,9 @@ exports.getDataPelanggaranSiswa = async(request, response) => { // variabel asyn
 //untuk handle add data pelanggaran siswa
 exports.addDataPelanggaranSiswa = (request, response) => {
     let newData = {
-        waktu : request.data.waktu,
-        id_siswa : request.data.id_siswa,
-        id_user : request.data.id_user
+        waktu : request.body.waktu,
+        id_siswa : request.body.id_siswa,
+        id_user : request.body.id_user
     }
     // insert ke tabel pelanggaran_siswa
     modelPS.create(newData)
@@ -25,13 +28,13 @@ exports.addDataPelanggaranSiswa = (request, response) => {
             let detailPS = request.body.detail_pelanggaran_siswa
             //asumsinya adl detail_pelanggaran_siswa bertipe array
             let id = result.id_pelanggaran_siswa
-            for (let i = 0; i < detail_pelanggaran_siswa.length; i++) {
-                detail_pelanggaran_siswa[i].id_pelanggaran_siswa = id
+            for (let i = 0; i < detailPS.length; i++) {
+                detailPS[i].id_pelanggaran_siswa = id
                 
             }
 
             //insert ke tabel detail_pelanggaran_siswa
-            modelDetailPS.bulkCreate(detail_pelanggaran_siswa) // menggunakan bulk karena bertipe array which is banyak data
+            modelDetailPS.bulkCreate(detailPS) // menggunakan bulk karena bertipe array which is banyak data
             .then(result => {
                 return response.json({
                     message : `Data has been inserted`
