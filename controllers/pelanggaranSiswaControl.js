@@ -6,8 +6,7 @@ let modelDetailPS = require("../models/index").detail_pelanggaran_siswa
 
 exports.getDataPelanggaranSiswa = async(request, response) => { // variabel async digunakan ketika memakai await
     let dataPelanggaran = await modelPS.findAll({
-        include:["siswa"],
-        include:["user"]
+        include:["siswa","user","detail_pelanggaran_siswa"]
     }) //biasanya menggunakan seperti inti hanya untuk get
     return response.json({
         Count : dataPelanggaran.length,
