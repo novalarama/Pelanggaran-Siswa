@@ -18,4 +18,6 @@ app.put("/:id_user", userControl.editDataUser)
 //end point DELETE untuk menghapus data user
 app.delete("/:id_user", userControl.deleteDataUser)
 
+app.post("/auth", userControl.authentication)
+
 module.exports = app

@@ -1,21 +1,25 @@
+let jwt = require("jsonwebtoken")
 exports.authorization = (request, response, next) => {
     // token dikirim melalui header
     let header = request.headers.authorization
 
-    if (header === null) {
-        return response.json({
-            messsage : `Unauthorize!`
-        })
-    }
-
-    // check jika header ada
     let token = header && header.split(" ")[1]
-    
-    if (!token) {
+
+    if(token === null){
         return response.json({
-            messsage : `Invalid Token`
+            message : `Unauthorized`
+
         })
-    }else{
-        next()
+    }else {
+        let secretKey = "Pelanggaran Siswa"
+        jwt.verify(token, secretKey, (error, user) => {
+            if(error){
+                return response.json({
+                    message : `Invalid Token`
+                })
+            }else{
+                next()
+            }
+        })
     }
 }

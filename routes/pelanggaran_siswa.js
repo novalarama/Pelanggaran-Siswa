@@ -7,8 +7,10 @@ app.use(express.json())
 // call pelanggaran control
 let pelanggaranSiswaControl = require("../controllers/pelanggaranSiswaControl")
 
+let authorization = require("../middlewares/authorization");
+
 //end point GET untuk menampilkan data pelanggaran siswa
-app.get("/", pelanggaranSiswaControl.getDataPelanggaranSiswa)
+app.get("/", authorization.authorization, pelanggaranSiswaControl.getDataPelanggaranSiswa)
 
 //end point POST untuk menambah data pelanggaran siswa
 app.post("/", pelanggaranSiswaControl.addDataPelanggaranSiswa)

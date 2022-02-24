@@ -1,4 +1,5 @@
 const md5 = require("md5")
+let jwt = require(`jsonwebtoken`)
 
 // memanggil file model untuk user
 let modelUser = require("../models/index").user
@@ -77,4 +78,36 @@ exports.deleteDataUser = (request, response) => {
             message : error.message
         })
     })
+}
+
+exports.authentication = async(request, response) => {
+    let data = {
+        username : request.body.username,
+        password : md5(request.body.password)
+    }
+
+    // validasi
+    let result = await modelUser.findOne({where : data})
+
+    if (result) {
+        // data ditemukan
+
+        // payload adalah data yang akan dienkripsi
+        let payload = JSON.stringify(result) // untuk mengubah data objek ke json
+
+        let secretKey = `Pelanggaran Siswa`
+
+        // generate token
+        let token = jwt.sign(payload, secretKey)
+        return response.json({
+            logged: true,
+            token: token
+        })
+    } else {
+        // data tidak ditemukan
+        return response.json({
+            logged: false,
+            message : `Invalid Username or Password, Please Try Again!`
+        })
+    }
 }
