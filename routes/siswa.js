@@ -7,8 +7,9 @@ app.use(express.json());
 let siswaControl = require("../controllers/siswaControl");
 
 // call test middleware
- let tesMiddleware = require("../middlewares/test")
+let tesMiddleware = require("../middlewares/test");
 let authorization = require("../middlewares/authorization");
+let uploadImage = require("../middlewares/uploadImage");
 
 //end point GET untuk menampilkan data siswa
 app.get(
@@ -22,7 +23,11 @@ app.get(
 );
 
 //end point POST untuk menambah data siswa
-app.post("/", siswaControl.addDataSiswa);
+app.post(
+  "/",
+  [uploadImage.upload.single(`image`),authorization.authorization],
+  siswaControl.addDataSiswa
+)
 
 //end point PUT untuk mengedit data siswa
 app.put("/:id_siswa", siswaControl.editDataSiswa);
