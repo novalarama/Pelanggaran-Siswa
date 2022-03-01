@@ -71,9 +71,9 @@ exports.editDataPelanggaranSiswa = (request, response) => {
     id_user: request.body.id_user,
   };
   // eksekusi
-  modelPelanggaran
-    .update(DataPelanggaran, { where: { id_pelanggaran: idPelanggaran } })
-    .then((result) => {
+  modelPS
+    .update(DataPelanggaran, { where: { id_pelanggaran_siswa: idPelanggaran } })
+    .then(async(result) => {
       // ada 2 detail -> 1 detail
       // hapus data detail yang lama
       // step 1 : hapus semua detail berdasarkan id_pelanggaran_siswa
