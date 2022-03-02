@@ -5,12 +5,13 @@ app.use(express.json())
 
 // call user control
 let userControl = require("../controllers/userControl")
+const userValidator = require("../middlewares/userValidator")
 
 //end point GET untuk menampilkan data user
 app.get("/", userControl.getDataUser)
 
 //end point POST untuk menambah data user
-app.post("/", userControl.addDataUser)
+app.post("/", [userValidator.validate],userControl.addDataUser)
 
 //end point PUT untuk mengedit data user
 app.put("/:id_user", userControl.editDataUser)

@@ -72,7 +72,7 @@ exports.editDataPelanggaranSiswa = (request, response) => {
   };
   // eksekusi
   modelPS
-    .update(DataPelanggaran, { where: { id_pelanggaran_siswa: idPelanggaran } })
+    .update(DataPelanggaran, { where: { id_pelanggaran: idPelanggaran } })
     .then(async(result) => {
       // ada 2 detail -> 1 detail
       // hapus data detail yang lama
