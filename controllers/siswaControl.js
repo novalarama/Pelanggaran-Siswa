@@ -48,7 +48,7 @@ exports.addDataSiswa = (request, response) => {
 }
 
 //untuk handle edit data siswa
-exports.editDataSiswa = (request, response) => {
+exports.editDataSiswa = async(request, response) => {
     let idSiswa = request.params.id_siswa
     let dataSiswa = {
         nis : request.body.nis,
@@ -56,18 +56,30 @@ exports.editDataSiswa = (request, response) => {
         kelas : request.body.kelas,
         poin : request.body.poin
     }
-    // eksekusi 
-    modelSiswa.update(dataSiswa, {where :{id_siswa:idSiswa}})
-    .then(result => {
-        return response.json({
-            message : `Data has been updated`
+    if (request.file) {
+        // jika edit menyertakan file gambar
+        let siswa = await modelSiswa.findOne({ where: { id_siswa: idSiswa } })
+        let oldFileName = siswa.image
+
+        // delete file
+        let location = path.join(__dirname, "../image", oldFileName)
+        fs.unlink(location, error => console.log(error))
+
+        // menyisipkan nama file baru ke dalam objek dataSiswa
+        dataSiswa.image = request.file.filename
+    }
+
+    modelSiswa.update(dataSiswa, { where: { id_siswa: id } })
+        .then(result => {
+            return response.json({
+                message: `Data siswa berhasil diubah`
+            })
         })
-    })
-    .catch(error => {
-        return response.json({
-            message : error.message
+        .catch(error => {
+            return response.json({
+                message: error.message
+            })
         })
-    })
 }
 
 //untuk handle delete data siswa

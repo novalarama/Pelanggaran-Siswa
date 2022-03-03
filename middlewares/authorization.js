@@ -5,7 +5,7 @@ exports.authorization = (request, response, next) => {
 
     let token = header && header.split(" ")[1]
 
-    if(token === null){
+    if(token == null){
         return response.json({
             message : `Unauthorized`
 

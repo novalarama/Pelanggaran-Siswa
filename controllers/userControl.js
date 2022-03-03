@@ -55,7 +55,7 @@ exports.editDataUser = (request, response) => {
         password: request.body.password
     }
     // eksekusi 
-    modelUser.update(DataUser, {where :{id_user:idUser}})
+    modelUser.update(DataUser, {where : idUser})
     .then(result => {
         return response.json({
             message : `Data has been updated`
@@ -73,7 +73,7 @@ exports.deleteDataUser = (request, response) => {
     let idUser = request.params.id_user
 
     // eksekusi 
-    modelUser.destroy({where :{id_user:idUser}})
+    modelUser.destroy({where : idUser})
     .then(result => {
         return response.json({
             message : `Data has been deleted`

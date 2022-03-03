@@ -33,7 +33,7 @@ exports.addDataPelanggaranSiswa = (request, response) => {
   // insert ke tabel pelanggaran_siswa
   modelPS
     .create(newData)
-    .then((result) => {
+    .then(result => {
       let detailPS = request.body.detail_pelanggaran_siswa;
       //asumsinya adl detail_pelanggaran_siswa bertipe array
       let id = result.id_pelanggaran_siswa;
@@ -44,18 +44,18 @@ exports.addDataPelanggaranSiswa = (request, response) => {
       //insert ke tabel detail_pelanggaran_siswa
       modelDetailPS
         .bulkCreate(detailPS) // menggunakan bulk karena bertipe array which is banyak data
-        .then((result) => {
+        .then(result => {
           return response.json({
             message: `Data has been inserted`,
           });
         })
-        .catch((error) => {
+        .catch(error => {
           return response.json({
             message: error.message,
           });
         });
     })
-    .catch((error) => {
+    .catch(error => {
       return response.json({
         message: error.message,
       });
@@ -63,8 +63,8 @@ exports.addDataPelanggaranSiswa = (request, response) => {
 };
 
 //untuk handle edit data pelanggaran siswa
-exports.editDataPelanggaranSiswa = (request, response) => {
-  let idPelanggaran = request.params.id_pelanggaran;
+exports.editDataPelanggaranSiswa = async(request, response) => {
+  let id = request.params.id_pelanggaran_siswa;
   let DataPelanggaran = {
     waktu: request.body.waktu,
     id_siswa: request.body.id_siswa,
@@ -72,7 +72,7 @@ exports.editDataPelanggaranSiswa = (request, response) => {
   };
   // eksekusi
   modelPS
-    .update(DataPelanggaran, { where: { id_pelanggaran: idPelanggaran } })
+    .update(DataPelanggaran, { where: { id_pelanggaran_siswa: id } })
     .then(async(result) => {
       // ada 2 detail -> 1 detail
       // hapus data detail yang lama
@@ -84,6 +84,7 @@ exports.editDataPelanggaranSiswa = (request, response) => {
       });
 
       // step 2: insert data detail terbaru
+      let detail_pelanggaran_siswa = request.body.detail_pelanggaran_siswa
       let id = result.id_pelanggaran_siswa;
       for (let i = 0; i < detailPS.length; i++) {
         detailPS[i].id_pelanggaran_siswa = id;
@@ -92,18 +93,18 @@ exports.editDataPelanggaranSiswa = (request, response) => {
       //insert ke tabel detail_pelanggaran_siswa
       modelDetailPS
         .bulkCreate(detailPS) // menggunakan bulk karena bertipe array which is banyak data
-        .then((result) => {
+        .then(result => {
           return response.json({
             message: `Data has been inserted`,
           });
         })
-        .catch((error) => {
+        .catch(error => {
           return response.json({
             message: error.message,
           });
         });
     })
-    .catch((error) => {
+    .catch(error => {
       return response.json({
         message: error.message,
       });
@@ -112,12 +113,12 @@ exports.editDataPelanggaranSiswa = (request, response) => {
 
 //untuk handle delete data pelanggaran siswa
 exports.deleteDataPelanggaranSiswa = (request, response) => {
-  let idPelanggaran = request.params.id_pelanggaran;
+  let id = request.params.id_pelanggaran_siswa;
 
   // eksekusi
   modelDetailPS
-    .destroy({ where: { id_pelanggaran: idPelanggaran } })
-    .then((result) => {
+    .destroy({ where: { id_pelanggaran_siswa: id } })
+    .then(result => {
       let id = request.params.id_pelanggaran_siswa
 
       //hapus data pelanggaran siswa

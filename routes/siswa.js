@@ -25,14 +25,22 @@ app.get(
 //end point POST untuk menambah data siswa
 app.post(
   "/",
-  [uploadImage.upload.single(`image`),authorization.authorization],
+  [uploadImage.upload.single(`image`), authorization.authorization],
   siswaControl.addDataSiswa
-)
+);
 
 //end point PUT untuk mengedit data siswa
-app.put("/:id_siswa", siswaControl.editDataSiswa);
+app.put(
+  "/:id_siswa",
+  [authorization.authorization],
+  siswaControl.editDataSiswa
+);
 
 //end point DELETE untuk menghapus data siswa
-app.delete("/:id_siswa", siswaControl.deleteDataSiswa);
+app.delete(
+  "/:id_siswa",
+  [authorization.authorization],
+  siswaControl.deleteDataSiswa
+);
 
 module.exports = app;
