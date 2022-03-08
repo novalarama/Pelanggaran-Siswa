@@ -69,7 +69,7 @@ exports.editDataSiswa = async(request, response) => {
         dataSiswa.image = request.file.filename
     }
 
-    modelSiswa.update(dataSiswa, { where: { id_siswa: id } })
+    modelSiswa.update(dataSiswa, { where: { id_siswa: idSiswa } })
         .then(result => {
             return response.json({
                 message: `Data siswa berhasil diubah`

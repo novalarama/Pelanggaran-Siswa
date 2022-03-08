@@ -3,6 +3,8 @@ const detail_pelanggaran_siswa = require("../models/detail_pelanggaran_siswa");
 // memanggil file model untuk pelanggaran
 let modelPS = require("../models/index").pelanggaran_siswa;
 let modelDetailPS = require("../models/index").detail_pelanggaran_siswa;
+let siswaModel = require("../models/index").siswa
+let pelanggaranModel = require("../models/index").pelanggaran
 
 exports.getDataPelanggaranSiswa = async (request, response) => {
   // variabel async digunakan ketika memakai await
@@ -24,7 +26,34 @@ exports.getDataPelanggaranSiswa = async (request, response) => {
 };
 
 //untuk handle add data pelanggaran siswa
-exports.addDataPelanggaranSiswa = (request, response) => {
+exports.addDataPelanggaranSiswa = async(request, response) => {
+  // proses pengurangan
+  // 1. Mengambil nilai poin siswa dari tabe; siswa
+  let siswa = await siswaModel.findOne({
+    where: {id_siswa: request.body.id_siswa}
+  })
+  let poinSiswa = siswa.poin
+  // 2. Mengambil nilai poin dari tiap pelanggarannya
+  let detail = request.body.detail_pelanggaran_siswa
+  let jumlahPoin = 0
+  for (let i = 0; i < detail.length; i++) {
+    // ambil poin dari tiap pelanggaran
+    let pelanggaran = await pelanggaranModel.findOne({
+      where : {id_pelanggaran: detail[i].id_pelanggaran}
+    })
+    let poinPelanggaran = pelanggaran.poin
+    jumlahPoin += poinPelanggaran
+  }
+  // 3. Poin siswa dikurangi jumlah poin pelanggarannya
+  let newPoin = poinSiswa - jumlahPoin
+  // 4 . update poin siswa nya
+  await siswaModel.update({
+    poin : newPoin
+  },
+  {where : {id_siswa: request.body.id_siswa}}
+  )
+
+  //proses insert
   let newData = {
     waktu: request.body.waktu,
     id_siswa: request.body.id_siswa,
