@@ -6,6 +6,10 @@ let modelDetailPS = require("../models/index").detail_pelanggaran_siswa;
 let siswaModel = require("../models/index").siswa
 let pelanggaranModel = require("../models/index").pelanggaran
 
+//import sequelize operator
+let sequelize = require(`sequelize`)
+let Op = sequelize.Op
+
 exports.getDataPelanggaranSiswa = async (request, response) => {
   // variabel async digunakan ketika memakai await
   let dataPelanggaran = await modelPS.findAll({
@@ -16,14 +20,37 @@ exports.getDataPelanggaranSiswa = async (request, response) => {
         model: modelDetailPS,
         as: "detail_pelanggaran_siswa",
         include: ["pelanggaran"],
-      },
+      }
     ],
+    
   }); //biasanya menggunakan seperti inti hanya untuk get
   return response.json({
     Count: dataPelanggaran.length,
     Pelanggaran: dataPelanggaran,
   });
 };
+
+exports.filterPS = async(request, response) => {
+  // filter tanggal awal dan akhir
+  let start = request.body.start // tgl awal
+  let end = request.body.end // tgl akhir
+
+  let dataPS = await modelPS.findAll({
+    include: [
+      "siswa",
+      "user",
+      {
+        model: modelDetailPS,
+        as: "detail_pelanggaran_siswa",
+        include: ["pelanggaran"],
+      }
+    ],
+    where: {
+      waktu: {[Op.between]:[start, end]}
+    }
+  }); 
+  return response.json(dataPS)
+}
 
 //untuk handle add data pelanggaran siswa
 exports.addDataPelanggaranSiswa = async(request, response) => {

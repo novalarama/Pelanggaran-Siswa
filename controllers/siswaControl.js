@@ -4,6 +4,10 @@ let modelSiswa = require("../models/index").siswa
 let path = require("path")
 let fs =  require("fs")
 
+//import sequelize operator
+let sequelize = require(`sequelize`)
+let Op = sequelize.Op
+
 exports.getDataSiswa = (request, response) => {
     modelSiswa.findAll()
         .then(result => {
@@ -17,6 +21,22 @@ exports.getDataSiswa = (request, response) => {
                 message: error.message
             })
         })
+}
+
+exports.findSiswa = async(request, response) => {
+    let keyword = request.body.keyword
+
+    let dataSiswa = await modelSiswa.findAll({
+        where : {
+            [Op.or] : {
+                nama: {[Op.like]:`%${keyword}%`},
+                nis: {[Op.like]:`%${keyword}%`},
+                kelas: {[Op.like]:`%${keyword}%`}
+            }
+        }
+    })
+
+    return response.json(dataSiswa)
 }
 
 //untuk handle add data siswa

@@ -11,6 +11,8 @@ let authorization = require("../middlewares/authorization");
 //end point GET untuk menampilkan data pelanggaran
 app.get("/", authorization.authorization, pelanggaranControl.getDataPelanggaran)
 
+app.post("/find", [authorization.authorization], pelanggaranControl.findPelanggaran)
+
 //end point POST untuk menambah data pelanggaran
 app.post("/", pelanggaranControl.addDataPelanggaran)
 

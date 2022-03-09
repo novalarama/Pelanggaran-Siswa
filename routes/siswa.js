@@ -22,6 +22,9 @@ app.get(
   siswaControl.getDataSiswa
 );
 
+app.post("/find", [authorization.authorization], siswaControl.findSiswa)
+
+
 //end point POST untuk menambah data siswa
 app.post(
   "/",

@@ -1,6 +1,10 @@
 // memanggil file model untuk pelanggaran
 let modelPelanggaran = require("../models/index").pelanggaran
 
+//import sequelize operator
+let sequelize = require(`sequelize`)
+let Op = sequelize.Op
+
 exports.getDataPelanggaran = async(request, response) => { // variabel async digunakan ketika memakai await
     let dataPelanggaran = await modelPelanggaran.findAll() //biasanya menggunakan seperti inti hanya untuk get
     return response.json({
@@ -8,6 +12,22 @@ exports.getDataPelanggaran = async(request, response) => { // variabel async dig
         Pelanggaran : dataPelanggaran
     })
 }
+
+exports.findPelanggaran = async(request, response) => {
+    let keyword = request.body.keyword
+
+    let dataPelanggaran = await modelPelanggaran.findAll({
+        where : {
+            [Op.or] : {
+                nama_pelanggaran: {[Op.like]:`%${keyword}%`},
+                poin: {[Op.like]:`%${keyword}%`}
+            }
+        }
+    })
+
+    return response.json(dataPelanggaran)
+}
+
 
 //untuk handle add data pelanggaran
 exports.addDataPelanggaran = (request, response) => {
