@@ -35,6 +35,7 @@ exports.filterPS = async(request, response) => {
   let start = request.body.start // tgl awal
   let end = request.body.end // tgl akhir
 
+
   let dataPS = await modelPS.findAll({
     include: [
       "siswa",
@@ -46,10 +47,35 @@ exports.filterPS = async(request, response) => {
       }
     ],
     where: {
-      waktu: {[Op.between]:[start, end]}
+      //waktu: {[Op.between]:[start, end]}
+      nama: namaInput
     }
   }); 
   return response.json(dataPS)
+}
+
+exports.filterNama = async(request,response)=>{
+  let id = request.params.id_siswa
+
+  let dataPS = await modelPS.findAll({
+    include: [
+      "siswa",
+      "user",
+      {
+        model: modelDetailPS,
+        as: "detail_pelanggaran_siswa",
+        include: ["pelanggaran"],
+      }
+    ],
+    where: {
+      //waktu: {[Op.between]:[start, end]}
+      id_siswa: id
+    }
+  }); 
+  return response.json({
+    Count: dataPS.length,
+    Pelanggaran: dataPS,
+  });
 }
 
 //untuk handle add data pelanggaran siswa

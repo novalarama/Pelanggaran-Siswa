@@ -14,6 +14,8 @@ app.get("/", authorization.authorization, pelanggaranSiswaControl.getDataPelangg
 
 app.post("/find", [authorization.authorization], pelanggaranSiswaControl.filterPS)
 
+app.get("/:id_siswa", [authorization.authorization], pelanggaranSiswaControl.filterNama)
+
 //end point POST untuk menambah data pelanggaran siswa
 app.post("/", pelanggaranSiswaControl.addDataPelanggaranSiswa)
 
