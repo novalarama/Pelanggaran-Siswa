@@ -5,6 +5,10 @@ const{validationResult} = require(`express-validator`)
 // memanggil file model untuk user
 let modelUser = require("../models/index").user
 
+//import sequelize operator
+let sequelize = require(`sequelize`)
+let Op = sequelize.Op
+
 exports.getDataUser = (request, response) => {
     modelUser.findAll()
         .then(result => {
@@ -18,6 +22,21 @@ exports.getDataUser = (request, response) => {
                 message: error.message
             })
         })
+}
+
+exports.findUser = async(request, response) => {
+    let keyword = request.body.keyword
+
+    let dataUser = await modelUser.findAll({
+        where : {
+            [Op.or] : {
+                username: {[Op.like]:`%${keyword}%`},
+                nama_user: {[Op.like]:`%${keyword}%`}
+            }
+        }
+    })
+
+    return response.json(dataUser)
 }
 
 //untuk handle add data siswa
