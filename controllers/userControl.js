@@ -89,10 +89,12 @@ exports.editDataUser = (request, response) => {
 
 //untuk handle delete data siswa
 exports.deleteDataUser = (request, response) => {
-    let idUser = request.params.id_user
+    let params = {
+        id_user : request.params.id_user
+    }
 
     // eksekusi 
-    modelUser.destroy({where : idUser})
+    modelUser.destroy({where : params})
     .then(result => {
         return response.json({
             message : `Data has been deleted`
