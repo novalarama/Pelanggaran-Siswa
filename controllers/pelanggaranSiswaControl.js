@@ -98,7 +98,7 @@ exports.addDataPelanggaranSiswa = async(request, response) => {
     jumlahPoin += poinPelanggaran
   }
   // 3. Poin siswa dikurangi jumlah poin pelanggarannya
-  let newPoin = poinSiswa - jumlahPoin
+  let newPoin = poinSiswa + jumlahPoin
   // 4 . update poin siswa nya
   await siswaModel.update({
     poin : newPoin
@@ -167,14 +167,14 @@ exports.editDataPelanggaranSiswa = async(request, response) => {
 
       // step 2: insert data detail terbaru
       let detail_pelanggaran_siswa = request.body.detail_pelanggaran_siswa
-      let id = result.id_pelanggaran_siswa;
-      for (let i = 0; i < detailPS.length; i++) {
-        detailPS[i].id_pelanggaran_siswa = id;
+      let id = request.params.id_pelanggaran_siswa
+      for (let i = 0; i < detail_pelanggaran_siswa.length; i++) {
+        detail_pelanggaran_siswa[i].id_pelanggaran_siswa = id;
       }
 
       //insert ke tabel detail_pelanggaran_siswa
       modelDetailPS
-        .bulkCreate(detailPS) // menggunakan bulk karena bertipe array which is banyak data
+        .bulkCreate(detail_pelanggaran_siswa) // menggunakan bulk karena bertipe array which is banyak data
         .then(result => {
           return response.json({
             message: `Data has been inserted`,

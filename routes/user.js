@@ -7,6 +7,7 @@ app.use(express.json())
 let userControl = require("../controllers/userControl")
 const authorization = require("../middlewares/authorization")
 const userValidator = require("../middlewares/userValidator")
+const userValid = require("../middlewares/userJoiValidator")
 
 //end point GET untuk menampilkan data user
 app.get("/",[authorization.authorization], userControl.getDataUser)
@@ -14,10 +15,10 @@ app.get("/",[authorization.authorization], userControl.getDataUser)
 app.post("/find", [authorization.authorization], userControl.findUser)
 
 //end point POST untuk menambah data user
-app.post("/", [userValidator.validate, authorization.authorization],userControl.addDataUser)
+app.post("/", [userValid.validate, authorization.authorization],userControl.addDataUser)
 
 //end point PUT untuk mengedit data user
-app.put("/:id_user", [authorization.authorization], userControl.editDataUser)
+app.put("/:id_user", [userValidator.validate, authorization.authorization], userControl.editDataUser)
 
 //end point DELETE untuk menghapus data user
 app.delete("/:id_user", [authorization.authorization], userControl.deleteDataUser)
