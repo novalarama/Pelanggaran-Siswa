@@ -35,7 +35,7 @@ app.post(
 //end point PUT untuk mengedit data siswa
 app.put(
   "/:id_siswa",
-  [authorization.authorization],
+  [uploadImage.upload.single(`image`), authorization.authorization],
   siswaControl.editDataSiswa
 );
 

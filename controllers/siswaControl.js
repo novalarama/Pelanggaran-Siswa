@@ -92,7 +92,8 @@ exports.editDataSiswa = async(request, response) => {
     modelSiswa.update(dataSiswa, { where: { id_siswa: idSiswa } })
         .then(result => {
             return response.json({
-                message: `Data siswa berhasil diubah`
+                message: `Data siswa berhasil diubah`,
+                hasil: request.body
             })
         })
         .catch(error => {
